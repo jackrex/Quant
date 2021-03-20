@@ -1,0 +1,10 @@
+tushare==1.2.54
+pandas==0.24.2
+wxPython==4.1.0
+futu_api==4.0.1300
+schedule==0.6.0
+futu==0.0.1
+APScheduler==3.6.3
+requests==2.20.1
+aiohttp==3.6.2
+websocket_client==0.57.0
