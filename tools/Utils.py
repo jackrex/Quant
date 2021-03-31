@@ -1,11 +1,7 @@
 # -*- coding: UTF-8 -*-
-
+from log.LogSystem import logSys
 from strategy.Config import Config
-import schedule
-import time
-from datetime import datetime
-import pandas as pd
-
+from futubull.futu_api import *
 
 class Utils:
 
@@ -39,13 +35,12 @@ class Utils:
                 logSys.log('没票了')
                 break
             dt = datetime.now()
-            csv_name = dt.strftime('appbuy_' + Config.STOCK_NUM + '_' + '%Y%m%d%H%M%S') + '_0' + str(
-                i) + '_order_strategy.csv'
-            # dataframe = pd.DataFrame(
-            #     {'证券代码': [Config.STOCK_NUM], '委托方向买入': [1], 'time': [rd['time']], 'price': [rd['price']], '委托数量': [volume]})
-            # logSys.log("buy_stock_time" + str(Config.BUY_STOCK_TIMES))
-            # dataframe.to_csv(csv_name, index=False, sep=',', encoding='utf-8')
+            csv_name = dt.strftime('appbuy_' + Config.STOCK_NUM + '_' + '%Y%m%d%H%M%S') + '_0' + str(i) + '_order_strategy.csv'
+            dataframe = pd.DataFrame({'证券代码': [Config.STOCK_NUM], '委托方向买入': [1], 'time': [rd['time']], 'price': [rd['price']], '委托数量': [volume]})
+            logSys.log("buy_stock_time" + str(Config.BUY_STOCK_TIMES))
+            dataframe.to_csv(csv_name, index=False, sep=',', encoding='utf-8')
 
+            futuApi.place_order(rd['last_price']+Config.BUY_PRICE_GAP, real_num, rd, TrdSide.BUY)
             #######
 
             # 开仓
@@ -99,14 +94,14 @@ class Utils:
             if i == Config.BUY_STOCK_TIMES - 1:
                 volume = volume + Config.remainder
             dt = datetime.now()
-            csv_name = dt.strftime('appsold_' + Config.STOCK_NUM + '_' + '%Y%m%d%H%M%S') + '_0' + str(
-                i) + '_order_strategy.csv'
+            csv_name = dt.strftime('appsold_' + Config.STOCK_NUM + '_' + '%Y%m%d%H%M%S') + '_0' + str(i) + '_order_strategy.csv'
             dataframe = pd.DataFrame(
                 {'外部委托序号': ['1'], '证券代码': [Config.STOCK_NUM], '委托方向卖出': [0], '卖出': [status], 'time': [rd['time']],
                  'buy_time': [Config.previous_buy_point['time']],
                  'price': [rd['price']],
                  '委托数量': [volume]})
             dataframe.to_csv(csv_name, index=False, sep=',', encoding='utf-8')
+            futuApi.place_order(rd['last_price']-Config.SOLD_PRICE_GAP, volume, rd, TrdSide.SELL)
 
         Config.remainder = 0
 

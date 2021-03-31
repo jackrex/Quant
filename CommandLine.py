@@ -1,6 +1,8 @@
 # -*- coding: UTF-8 -*-
 # 命令行版本
-from strategy.FTCallbackUp import FTCallbackUp
+# from strategy.FTCallbackUp import FTCallbackUp
+from futubull.futu_api import *
+from strategy.InstanceConfig import InstanceConfig
 
 # Items: Index(['code', 'data_date', 'data_time', 'last_price', 'open_price',
 #        'high_price', 'low_price', 'prev_close_price', 'volume', 'turnover',
@@ -18,9 +20,9 @@ from strategy.FTCallbackUp import FTCallbackUp
 #        'after_amplitude']
 
 def main():
-    ftCallbackup = FTCallbackUp()
-
-
+    print("hello world.")
+    # ftCallbackup = FTCallbackUp()
+    futuApi.get_account_info()
 
 if __name__ == '__main__':
     main()
