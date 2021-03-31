@@ -36,27 +36,27 @@ class StockStatusManager:
         # return volume_sum
 
     def stock_arr_min_point(self):
-        min_price = float(self.__stock_point_arr[0]['price'])
+        min_price = float(self.__stock_point_arr[0]['last_price'])
         min_point = self.__stock_point_arr[0]
         for num, rd in enumerate(self.__stock_point_arr, start=0):
             if num == 0:
                 continue
 
-            if float(rd['price']) < min_price:
-                min_price = float(rd['price'])
+            if float(rd['last_price']) < min_price:
+                min_price = float(rd['last_price'])
                 min_point = rd
 
         return min_point
 
     def stock_arr_max_point(self):
-        max_price = float(self.__stock_point_arr[0]['price'])
+        max_price = float(self.__stock_point_arr[0]['last_price'])
         max_point = self.__stock_point_arr[0]
         for num, rd in enumerate(self.__stock_point_arr, start=0):
             if num == 0:
                 continue
 
-            if float(rd['price']) > max_price:
-                max_price = float(rd['price'])
+            if float(rd['last_price']) > max_price:
+                max_price = float(rd['last_price'])
                 max_point = rd
 
         return max_point
@@ -70,16 +70,16 @@ class StockStatusManager:
         if len(self.__stock_point_arr) < 5:
             return StockStatus.Stable
 
-        max_price = float(self.__stock_point_arr[0]['price'])
+        max_price = float(self.__stock_point_arr[0]['last_price'])
         min_price = max_price
         arr_price_up_count = 0
         arr_price_down_count = 0
 
         # 图形修正 如果队列中后边的连续 3 个点是单调递增或者递减序列  则认为就是上升或者下降状态
-        second_price = float(self.__stock_point_arr[1]['price'])
-        third_price = float(self.__stock_point_arr[2]['price'])
-        fourth_price = float(self.__stock_point_arr[3]['price'])
-        fifth_price = float(self.__stock_point_arr[4]['price'])
+        second_price = float(self.__stock_point_arr[1]['last_price'])
+        third_price = float(self.__stock_point_arr[2]['last_price'])
+        fourth_price = float(self.__stock_point_arr[3]['last_price'])
+        fifth_price = float(self.__stock_point_arr[4]['last_price'])
 
         if fifth_price > fourth_price > third_price or fourth_price > third_price > second_price:
             logSys.log("连续递增")
@@ -92,12 +92,12 @@ class StockStatusManager:
             if num == 0:
                 continue
 
-            if float(rd['price']) > max_price:
-                max_price = float(rd['price'])
+            if float(rd['last_price']) > max_price:
+                max_price = float(rd['last_price'])
                 arr_price_up_count = arr_price_up_count + 1
 
-            if float(rd['price']) < min_price:
-                min_price = float(rd['price'])
+            if float(rd['last_price']) < min_price:
+                min_price = float(rd['last_price'])
                 arr_price_down_count = arr_price_down_count + 1
 
         if arr_price_up_count >= 2:

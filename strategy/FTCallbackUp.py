@@ -20,6 +20,10 @@ class StockQuote(ft.StockQuoteHandlerBase):
         result = data[['code', 'last_price', 'prev_close_price', 'open_price', 'data_time', 'volume']]
         self.call_method(result)
 
+        # for item in data.keys():
+        #     print("item: " + item)
+        self.find_gold_buy_point(data)
+
         return ft.RET_OK, data
 
     def find_gold_buy_point(self, rd):
@@ -27,7 +31,7 @@ class StockQuote(ft.StockQuoteHandlerBase):
         # 涨停盘卖出
         if SHOULD_SOLD:
             if 'open' in rd:
-                change_percent = (float(rd['price']) - float(rd['open'])) / float(rd['price']) * 100
+                change_percent = (float(rd['last_price']) - float(rd['open'])) / float(rd['last_price']) * 100
                 if change_percent > 9.5 & change_percent < 10.5:
                     Utils.write_to_file_sold_out(rd, Config.SOLD_STOCK_VOLUME, 2)
             else:
@@ -46,9 +50,9 @@ class StockQuote(ft.StockQuoteHandlerBase):
                 # 止损卖出
         if SHOULD_SOLD:
             if Config.previous_buy_point is not None and (
-                    (float(Config.previous_buy_point['price']) - float(rd['price'])) > 0):
-                gap = ((float(Config.previous_buy_point['price']) - float(rd['price'])) / float(
-                    Config.previous_buy_point['price']))
+                    (float(Config.previous_buy_point['last_price']) - float(rd['last_price'])) > 0):
+                gap = ((float(Config.previous_buy_point['last_price']) - float(rd['last_price'])) / float(
+                    Config.previous_buy_point['last_price']))
                 if gap > 0.005:
                     Utils.write_to_file_sold_out(rd, Config.SOLD_STOCK_VOLUME, 1)
 
@@ -66,7 +70,7 @@ class StockQuote(ft.StockQuoteHandlerBase):
             Config.start_point = Config.stockStatusManager.stock_arr_min_point()  # 行情下跌, 重置为start 点
             Config.STATUS = 0
 
-        price_float_gap = (float(rd['price']) - float(Config.start_point['price'])) / float(Config.start_point['price'])
+        price_float_gap = (float(rd['last_price']) - float(Config.start_point['last_price'])) / float(Config.start_point['last_price'])
         logSys.log("\n" + "目前价格和Start 点价格涨幅 ---  price: GAP = " + str(price_float_gap))
         if price_float_gap > Config.UP_GAP and Config.STATUS == 0:  # 价格提升到2%以上
             logSys.log(">>>>>>>>> 价格超出增长阈值 >>>>>>>>")
@@ -102,8 +106,8 @@ class StockQuote(ft.StockQuoteHandlerBase):
                 logSys.log('Low Point: \n\n')
                 logSys.log(low_point)
 
-            if (float(Config.top_point['price']) - float(Config.low_point['price'])) / (
-                    float(Config.top_point['price']) - float(Config.start_point['price'])) < 0.333:
+            if (float(Config.top_point['last_price']) - float(Config.low_point['last_price'])) / (
+                    float(Config.top_point['last_price']) - float(Config.start_point['last_price'])) < 0.333:
                 logSys.log("Down percent is ok")
                 if Config.DOWN_TIME_MIN_GAP < Utils.get_sec(rd['time']) - Utils.get_sec(
                         Config.top_point['time']) < Config.DOWN_TIME_MAX_GAP:
