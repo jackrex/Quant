@@ -5,7 +5,6 @@ from strategy.Config import Config
 from log.LogSystem import logSys
 from tools.Utils import Utils
 from tools.StockStatusManager import StockStatus
-from strategy.InstanceConfig import *
 import futu as ft
 import schedule
 
@@ -169,26 +168,27 @@ class StockQuote(ft.StockQuoteHandlerBase):
             stock_data = ""
         logSys.log(stock_data)
 
-class FTCallbackUp:
+# class FTCallbackUp:
     # init log system
-    logSys.stock_code = ""
-    logSys.add_file_log()
+    # logSys.stock_code = ""
+    # logSys.add_file_log()
+    # futuApi.position_list()
 
-    def __init__(self):
-        quote_ctx = ft.OpenQuoteContext(host='127.0.0.1', port=11111)
-        print('current subscription status :', quote_ctx.query_subscription())  # 查询初始订阅状态
-
-        handler = StockQuote()
-        quote_ctx.set_handler(handler)  # 设置实时报价回调
-        ret_sub, err_message = quote_ctx.subscribe(['HK.00700'], [ft.SubType.QUOTE])  # 订阅实时报价类型，FutuOpenD开始持续收到服务器的推送
-        if ret_sub == ft.RET_OK:  # 订阅成功
-            print('subscribe successfully！current subscription status :', quote_ctx.query_subscription())  # 订阅成功后查询订阅状态
-            time_interval = Config.TIME_SCHEDULE
-            schedule.every(time_interval).seconds.do(InstanceConfig.ftCallbackup.find_gold_buy_point).tag("daily_task")  # 没有后面的括号
-            ft.time.sleep(600)  # 设置脚本接收FutuOpenD的推送持续时间为600秒
-            quote_ctx.close()
-        else:
-            print('subscription failed', err_message)
+    # def __init__(self):
+    #     quote_ctx = ft.OpenQuoteContext(host='127.0.0.1', port=11111)
+    #     print('current subscription status :', quote_ctx.query_subscription())  # 查询初始订阅状态
+    #
+    #     handler = StockQuote()
+    #     quote_ctx.set_handler(handler)  # 设置实时报价回调
+    #     ret_sub, err_message = quote_ctx.subscribe(['HK.00700'], [ft.SubType.QUOTE])  # 订阅实时报价类型，FutuOpenD开始持续收到服务器的推送
+    #     if ret_sub == ft.RET_OK:  # 订阅成功
+    #         print('subscribe successfully！current subscription status :', quote_ctx.query_subscription())  # 订阅成功后查询订阅状态
+    #         time_interval = Config.TIME_SCHEDULE
+    #         schedule.every(time_interval).seconds.do(InstanceConfig.ftCallbackup.find_gold_buy_point).tag("daily_task")  # 没有后面的括号
+    #         ft.time.sleep(600)  # 设置脚本接收FutuOpenD的推送持续时间为600秒
+    #         quote_ctx.close()
+    #     else:
+    #         print('subscription failed', err_message)
 
 
 

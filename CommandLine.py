@@ -1,8 +1,7 @@
 # -*- coding: UTF-8 -*-
 # 命令行版本
-# from strategy.FTCallbackUp import FTCallbackUp
 from futubull.futu_api import *
-from strategy.InstanceConfig import InstanceConfig
+from strategy.FTCallbackUp import *
 
 # Items: Index(['code', 'data_date', 'data_time', 'last_price', 'open_price',
 #        'high_price', 'low_price', 'prev_close_price', 'volume', 'turnover',
@@ -19,10 +18,29 @@ from strategy.InstanceConfig import InstanceConfig
 #        'after_turnover', 'after_change_val', 'after_change_rate',
 #        'after_amplitude']
 
+
 def main():
-    print("hello world.")
-    # ftCallbackup = FTCallbackUp()
-    futuApi.get_account_info()
+    FutuApi.get_account_info()
+    FutuApi.position_list()
+    FutuApi.get_history_kl_quota()
+
+    # logSys.stock_code = "HK.00700"
+    # logSys.add_file_log()
+    #
+    # quote_ctx = ft.OpenQuoteContext(host='127.0.0.1', port=11111)
+    # print('current subscription status :', quote_ctx.query_subscription())  # 查询初始订阅状态
+    # handler = StockQuote()
+    # quote_ctx.set_handler(handler)  # 设置实时报价回调
+    # ret_sub, err_message = quote_ctx.subscribe(['HK.00700'], [ft.SubType.QUOTE])  # 订阅实时报价类型，FutuOpenD开始持续收到服务器的推送
+    # if ret_sub == ft.RET_OK:  # 订阅成功
+    #     print('subscribe successfully！current subscription status :', quote_ctx.query_subscription())  # 订阅成功后查询订阅状态
+    #     # time_interval = Config.TIME_SCHEDULE
+    #     # schedule.every(time_interval).seconds.do(InstanceConfig.ftCallbackup.find_gold_buy_point).tag("daily_task")  # 没有后面的括号
+    #     ft.time.sleep(600)  # 设置脚本接收FutuOpenD的推送持续时间为600秒
+    #     quote_ctx.close()
+    # else:
+    #     print('subscription failed', err_message)
+
 
 if __name__ == '__main__':
     main()

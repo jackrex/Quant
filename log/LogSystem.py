@@ -32,7 +32,7 @@ class LogSystem:
         self.logger = logging.getLogger()
 
     def add_file_log(self):
-        logfile = "./" + self.file_name() + self.log_file_name
+        logfile = "./doc/" + self.file_name() + self.log_file_name
         self.fh = logging.FileHandler(logfile, mode='a')  # open的打开模式这里可以进行参考
         self.fh.setLevel(logging.DEBUG)
         self.fh.setFormatter(get_log_formatter())
