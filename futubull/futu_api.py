@@ -2,6 +2,7 @@
 # 富图API
 
 from futu import *
+from strategy.Breakthrough import *
 
 
 class SingletonMeta(type):
@@ -60,3 +61,22 @@ class FutuApi(metaclass=SingletonMeta):
         else:
             print('error:', data)
         FutuApi().quote_ctx.close()  # 结束后记得关闭当条连接，防止连接条数用尽
+
+    @staticmethod
+    def request_history_kline():
+        breakthrough = Breakthrough()
+        quote_ctx = OpenQuoteContext(host='127.0.0.1', port=11111)
+        ret, data, page_req_key = quote_ctx.request_history_kline('HK.01810', start='2021-04-01', end='2021-04-01', ktype=KLType.K_1M)  # 每页5个，请求第一页
+        # if ret == RET_OK:
+        #     print(data)
+        # else:
+        #     print('error:', data)
+
+        print(type(data))
+
+        for row in data.itertuples():
+            print(getattr(row, 'time_key') + " " + str(getattr(row, 'close')))
+            item = {"last_price": getattr(row, 'close'), "time": getattr(row, 'time_key')}
+            breakthrough.find_gold_buy_point(item)
+
+        quote_ctx.close()  # 结束后记得关闭当条连接，防止连接条数用尽

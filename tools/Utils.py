@@ -6,10 +6,10 @@ from futubull.futu_api import *
 class Utils:
 
     staticmethod
-    def get_sec(self, time_str):
+    def get_sec(time_str):
         """Get Seconds from time."""
-        words = time_str.str.split()
-        h, m, s = words.values[0][0].split(':')
+        words = time_str.split()
+        h, m, s = words[1].split(':')
         return int(h) * 3600 + int(m) * 60 + int(s)
 
     def get_sec_str(self, time_str):

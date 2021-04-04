@@ -23,6 +23,7 @@ def main():
     FutuApi.get_account_info()
     FutuApi.position_list()
     FutuApi.get_history_kl_quota()
+    FutuApi.request_history_kline()
 
     # logSys.stock_code = "HK.00700"
     # logSys.add_file_log()

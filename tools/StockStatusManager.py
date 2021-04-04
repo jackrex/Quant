@@ -100,7 +100,7 @@ class StockStatusManager:
                 min_price = float(rd['last_price'])
                 arr_price_down_count = arr_price_down_count + 1
 
-        print("arr_price_up_count=" + arr_price_up_count + ", arr_price_down_count=" + arr_price_down_count)
+        print("arr_price_up_count=" + str(arr_price_up_count) + ", arr_price_down_count=" + str(arr_price_down_count))
         if arr_price_up_count >= 2:
             return StockStatus.Up
 
