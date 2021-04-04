@@ -3,6 +3,7 @@
 
 from futu import *
 from strategy.Breakthrough import *
+import matplotlib.pyplot as plt
 
 
 class SingletonMeta(type):
@@ -66,17 +67,37 @@ class FutuApi(metaclass=SingletonMeta):
     def request_history_kline():
         breakthrough = Breakthrough()
         quote_ctx = OpenQuoteContext(host='127.0.0.1', port=11111)
-        ret, data, page_req_key = quote_ctx.request_history_kline('HK.01810', start='2021-04-01', end='2021-04-01', ktype=KLType.K_1M)  # 每页5个，请求第一页
-        # if ret == RET_OK:
-        #     print(data)
-        # else:
-        #     print('error:', data)
+        ret, data, page_req_key = quote_ctx.request_history_kline('HK.01810', start='2021-04-01', end='2021-04-01',
+                                                                  ktype=KLType.K_1M)
+        if ret == RET_OK:
+            plt.figure(dpi=700, figsize=(24, 2))
+            plt.plot(data[['close']], 'k--')
+            plt.grid(True)
 
-        print(type(data))
+            buy_in_index = []
+            buy_in_price = []
+            sell_out_index = []
+            sell_out_price = []
 
-        for row in data.itertuples():
-            print(getattr(row, 'time_key') + " " + str(getattr(row, 'close')))
-            item = {"last_price": getattr(row, 'close'), "time": getattr(row, 'time_key')}
-            breakthrough.find_gold_buy_point(item)
-
-        quote_ctx.close()  # 结束后记得关闭当条连接，防止连接条数用尽
+            index = 0
+            for row in data.itertuples():
+                print(getattr(row, 'time_key') + " " + str(getattr(row, 'close')))
+                item = {"last_price": getattr(row, 'close'), "time": getattr(row, 'time_key')}
+                res = breakthrough.find_gold_buy_point(index, item)
+                if res is not None:
+                    if res["direction"] == 0:
+                        buy_in_index.append(index)
+                        buy_in_price.append(res['price'])
+                    else:
+                        sell_out_index.append(index)
+                        sell_out_price.append(res['price'])
+                index = index + 1
+            plt.plot(buy_in_index, buy_in_price, 'ro', sell_out_index, sell_out_price, 'bo')
+            plt.xticks(rotation=270)
+            plt.xticks([x for x in range(332) if x % 2 == 0])  # x标记step设置为2
+            plt.yticks([26, 26.05, 26.1, 26.15, 26.2, 26.25, 26.3, 26.35, 26.4, 26.45, 26.5])
+            plt.show()
+            # 结束后记得关闭当条连接，防止连接条数用尽
+            quote_ctx.close()
+        else:
+            pass

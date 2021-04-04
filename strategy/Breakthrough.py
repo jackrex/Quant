@@ -13,7 +13,7 @@ class Breakthrough():
     # 买入的价格
     buyin = 0
 
-    def find_gold_buy_point(self, rd):
+    def find_gold_buy_point(self, index, rd):
         if Config.start_point is None:
             Config.start_point = rd
 
@@ -43,9 +43,9 @@ class Breakthrough():
                     print("1 ====> 2")
                     Config.STATUS = 2
                     # FutuApi.place_order("", "", "", "")
+                    return {'direction': 0, 'price': self.buyin - Config.BUY_PRICE_GAP, "index": index}
             elif Config.STATUS == 2:
                 print("三阶段，持续上升")
-
         elif Config.stockStatusManager.state == StockStatus.Down:
             if Config.STATUS == -1:
                 Config.STATUS = 0
@@ -63,7 +63,7 @@ class Breakthrough():
                     (float(self.maximumForStage3['last_price']) - float(rd['last_price'])) / \
                     float(self.maximumForStage3['last_price'])
                 print("drop_percent: " + str(drop_percent))
-                if drop_percent*100 > 3 or \
+                if drop_percent*100 > 0.3 or \
                         (self.buyin > rd['last_price'] and (self.buyin - float(rd['last_price'])) / self.buyin > 0.02):
                     print("卖出, 2 ====> 1")
                     print("==========================================")
@@ -72,5 +72,6 @@ class Breakthrough():
                     # FutuApi.place_order("", "", "", "")
                     Config.STATUS = 1
                     self.maximumForStage1 = self.maximumForStage3
+                    return {'direction': 1, 'price': rd['last_price'], "index": index}
         elif Config.stockStatusManager.state == StockStatus.Stable:
             pass
