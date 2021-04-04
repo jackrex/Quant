@@ -44,8 +44,8 @@ class Config:
     stock_point_arr = []
 
     DOWN_UP_MAX_COUNT = 1
-    # 0,1,2；0:Up，1:Down，2:Up Again
-    STATUS = 0
+    # -1,0,1,2；-1:出事状态，0:Up，1:Down，2:Up Again
+    STATUS = -1
     # Up Trends down count 4 for 3 is ok
     down_count = 0
     # Down Trends up count 4 for 3 is ok
