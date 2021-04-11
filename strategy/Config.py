@@ -1,4 +1,5 @@
 ################# GLOBE CONFIG
+from tools.SimpleStockStatusManager import SimpleStockStatusManager
 from tools.StockStatusManager import StockStatusManager
 from tools.DataFrameCSVManager import DataFrameCSVManager
 
@@ -57,7 +58,8 @@ class Config:
     low_point = None
     previous_buy_point = None
     previous_sell_point = None
-    stockStatusManager = StockStatusManager()
+    # stockStatusManager = StockStatusManager()
+    stockStatusManager = SimpleStockStatusManager()
     stockHelper = None
     csvManager = DataFrameCSVManager()
 

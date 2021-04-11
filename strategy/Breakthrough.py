@@ -1,13 +1,13 @@
 # -*- coding: UTF-8 -*-
 from strategy.Config import Config
-from tools.StockStatusManager import StockStatus
+from tools.StockStatusManager import StockStatus, StockStatusManager
 from tools.Utils import Utils
 from futubull.futu_api import *
 
 # 一阶段上升阈值
 UP_THRESHOLD_STAGE1 = 0.01
 # 二阶段下降幅度（相对一阶段）
-DOWN_RATIO_THRESHOLD_STAGE2 = 0.3
+DOWN_RATIO_THRESHOLD_STAGE2 = 0.9
 # 四阶段下降阈值
 DOWN_THRESHOLD_STAGE4 = 0.01
 # 止损线，
@@ -50,7 +50,7 @@ class Breakthrough:
                 ratio = decreaseValueStage2 / increaseValueStage1
                 print("ratio=" + str(decreaseValueStage2 / increaseValueStage1))
 
-                if increaseValueStage1 > 0 and 0.1 < ratio < DOWN_RATIO_THRESHOLD_STAGE2:
+                if 0.1 < ratio < DOWN_RATIO_THRESHOLD_STAGE2:
                     self.buyin = rd["last_price"] + Config.BUY_PRICE_GAP
                     print("三阶段，已下跌幅度(0~50%)。买入100股，共" + str(100 * self.buyin))
                     # print("period: " + str(Utils.get_sec(rd['time']) - Utils.get_sec(self.minimumForStage2['time'])))
@@ -79,7 +79,7 @@ class Breakthrough:
                 print("startPoint=" + str(self.startPoint))
                 increaseValueStage1 = float(self.maximumForStage1) - float(self.startPoint)
                 print("一阶段上涨幅度为: " + str(increaseValueStage1 / float(self.startPoint)))
-                if increaseValueStage1 / float(self.startPoint) > 0.01:
+                if increaseValueStage1 / float(self.startPoint) > UP_THRESHOLD_STAGE1:
                     print("上涨幅度超过1%")
                     Config.STATUS = 1
                 else:
@@ -116,7 +116,7 @@ class Breakthrough:
                     print("startPoint=" + str(self.startPoint))
                     _increaseValueStage1 = float(self.maximumForStage1) - float(self.startPoint)
                     print("一阶段上涨幅度为: " + str(_increaseValueStage1 / float(self.startPoint)))
-                    if _increaseValueStage1 / float(self.startPoint) > 0.005:
+                    if _increaseValueStage1 / float(self.startPoint) > UP_THRESHOLD_STAGE1:
                         print("上涨幅度超过1%")
                         Config.STATUS = 1
                     else:

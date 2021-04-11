@@ -3,18 +3,13 @@
 
 from enum import Enum
 from log.LogSystem import logSys
+from tools.IStockStatusManager import IStockStatusManager, StockStatus
 
 
-class StockStatus(Enum):
-    Down = -1
-    Stable = 0
-    Up = 1
-
-
-class StockStatusManager:
-
+class StockStatusManager(IStockStatusManager):
     def __init__(self):
         # 五点集
+        super().__init__()
         self.__stock_point_arr = []
         self.state = StockStatus.Stable
         self.previous_ave = 0
